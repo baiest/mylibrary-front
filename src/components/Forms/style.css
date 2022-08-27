@@ -1,0 +1,32 @@
+.field__container {
+  position: relative;
+  padding: 0;
+  border: none;
+  padding: 1rem 0;
+  margin: 1rem 0;
+}
+
+.field__input {
+  width: 100%;
+  background: none;
+  outline: none;
+  padding: 0.8rem 0;
+  border: none;
+  color: #fff;
+  font-size: 1.6rem;
+  border-bottom: 1px solid #fff;
+}
+
+.field__label {
+  position: absolute;
+  left: 0;
+  transform-origin: top left;
+  transform: translateY(0);
+  transition: transform 0.2s;
+}
+
+.field__input:focus+.field__label,
+.field__input:not(:placeholder-shown)+.field__label {
+  transform: translateY(-1.8rem) scale(0.8);
+  transform-origin: top left;
+}

@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import type { Book } from "@/models/Book";
-import type { RequestAxios } from "@/models/RequestAxios";
+import type { RequestAPI } from "@/models/RequestAPI";
 import { BookService } from "@/services/book";
-import { onMounted, reactive, toRefs } from "vue";
-
+import { onMounted, reactive, toRefs, watch } from "vue";
 const props = defineProps<{
   id: string;
 }>();
 
 const { id } = toRefs(props);
-const book = reactive<RequestAxios<Book | null>>({
+const book = reactive<RequestAPI<Book | null>>({
   loading: false,
   error: null,
   data: null,
 });
+
 onMounted(async () => {
   book.loading = true;
   try {

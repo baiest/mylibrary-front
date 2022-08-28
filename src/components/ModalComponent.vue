@@ -65,7 +65,7 @@ const closeModal = () => {
 }
 
 .modal__title {
-  background: #8e8effaa;
+  background: var(--main-color);
   padding: 10px;
 }
 .modal__body {

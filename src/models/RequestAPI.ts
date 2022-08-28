@@ -1,4 +1,4 @@
-export interface RequestAxios<T> {
+export interface RequestAPI<T> {
   loading: boolean;
   error: string | null;
   data: T;

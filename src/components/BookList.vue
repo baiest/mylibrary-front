@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Book } from "@/models/Book";
-import type { RequestAxios } from "@/models/RequestAxios";
+import type { RequestAPI } from "@/models/RequestAPI";
 import { BookService } from "@/services/book";
 import { onMounted, reactive, ref } from "vue";
 import DialogOptions from "./DialogOptions.vue";
 import Modal from "./ModalComponent.vue";
-const books = reactive<RequestAxios<Book[]>>({
+
+const books = reactive<RequestAPI<Book[]>>({
   loading: false,
   error: null,
   data: [],
@@ -47,6 +48,7 @@ const closeDelete = () => {
   isOpenDelete.value = false;
   bookSelected.value = null;
 };
+
 const deleteBook = async () => {
   try {
     if (!bookSelected.value) return;
@@ -126,7 +128,9 @@ onMounted(async () => {
             Editar
           </router-link>
         </li>
-        <li class="dialog__item" @click="openDelete">Borrar</li>
+        <li class="dialog__item">
+          <button @click="openDelete">Borrar</button>
+        </li>
       </ul>
     </DialogOptions>
   </section>
@@ -191,6 +195,9 @@ onMounted(async () => {
 .table__row:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+.table__row span:last-child {
+  border-right: none;
+}
 .table__row.table__row-selected {
   background: rgba(255, 255, 255, 0.3);
   transition: background 0.1s ease;
@@ -201,9 +208,20 @@ onMounted(async () => {
   margin: 0;
   list-style: none;
 }
-.dialog__item {
+
+.dialog__item a,
+.dialog__item button {
+  display: flex;
   padding: 5px 20px;
 }
+
+.dialog__item button {
+  border: none;
+  background: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
 a {
   text-decoration: none;
   color: #000;
@@ -233,7 +251,7 @@ p {
   font-size: 1.6rem;
   cursor: pointer;
 
-  background: #8e8effaa;
+  background: var(--main-color);
   border: none;
   border-radius: 12px;
   transition: all 0.1s ease-out;
@@ -244,7 +262,7 @@ p {
   transition: all 0.1s ease-in;
 }
 .modal__options-btn.cancel {
-  border: 1px solid #8e8effaa;
+  border: 1px solid var(--main-color);
   background: none;
 }
 </style>

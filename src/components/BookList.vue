@@ -10,15 +10,6 @@ const books = reactive<RequestAxios<Book[]>>({
   error: null,
   data: [],
 });
-onMounted(async () => {
-  books.loading = true;
-  try {
-    books.data = await BookService.getAll();
-  } catch (error: Error) {
-    books.error = error.message;
-  }
-  books.loading = false;
-});
 
 const dialogCords = reactive<{
   x: number;
@@ -27,13 +18,16 @@ const dialogCords = reactive<{
   x: 0,
   y: 0,
 });
+
 const tableContainer = ref<HTMLElement | null>(null);
 const openDialog = ref(false);
 const bookSelected = ref<number | null>(null);
+
 const closeDialog = () => {
   openDialog.value = false;
   bookSelected.value = null;
 };
+
 const selectBook = (event: MouseEvent, id: number) => {
   const maxX = (tableContainer.value?.offsetWidth as number) - 100;
   const maxY = (tableContainer.value?.offsetHeight as number) - 60;
@@ -43,6 +37,16 @@ const selectBook = (event: MouseEvent, id: number) => {
   dialogCords.y = maxY > event.clientY ? event.clientY : maxY;
   console.log({ ...dialogCords }, maxX);
 };
+
+onMounted(async () => {
+  books.loading = true;
+  try {
+    books.data = await BookService.getAll();
+  } catch (error: Error) {
+    books.error = error.message;
+  }
+  books.loading = false;
+});
 </script>
 <template>
   <section class="table__container" ref="tableContainer">
@@ -52,6 +56,8 @@ const selectBook = (event: MouseEvent, id: number) => {
         <span>Nombre</span>
         <span>Descripción</span>
         <span>Año de publicacion</span>
+        <span>Creado</span>
+        <span>Actualizado</span>
       </div>
       <div class="table__body">
         <p v-if="books.loading">Cargando...</p>
@@ -68,6 +74,8 @@ const selectBook = (event: MouseEvent, id: number) => {
           <span>{{ book.name }}</span>
           <span>{{ book.description }}</span>
           <span>{{ book.publication_year }}</span>
+          <span>{{ book.created_at.toLocaleString() }}</span>
+          <span>{{ book.updated_at.toLocaleString() }}</span>
         </div>
       </div>
     </div>

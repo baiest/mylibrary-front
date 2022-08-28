@@ -12,10 +12,10 @@ const router = createRouter({
     {
       path: "/book/:id",
       name: "detail",
-      // props: (router) => ({
-      //   id: router.params.id,
-      // }),
-      component: () => import("../components/Forms/BookForm.vue"),
+      props: (router) => ({
+        id: router.params.id,
+      }),
+      component: () => import("../views/BookView.vue"),
     },
     {
       path: "/book/new",

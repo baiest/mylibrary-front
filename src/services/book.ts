@@ -26,4 +26,7 @@ export class BookService {
     const response = await axios.get<Book>(`${BookService.path}/${id}`);
     return toBook(response.data);
   }
+  static async update(id: string | number, data: Partial<BookCreate>) {
+    await axios.put(`${BookService.path}/${id}`, data);
+  }
 }

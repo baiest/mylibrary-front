@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import "./style.css";
 import { listYears } from "@/utils/listYears";
-import { onMounted, reactive, ref, toRefs, watch } from "vue";
+import { onMounted, reactive, toRefs, watch } from "vue";
 import type { RequestAxios } from "@/models/RequestAxios";
 import type { Book, BookCreate } from "@/models/Book";
 import { BookService } from "@/services/book";
-
+import { useRouter } from "vue-router";
 const props = defineProps<{
   id?: number;
 }>();
 
 const { id } = toRefs(props);
-
+const router = useRouter();
 const book = reactive<RequestAxios<Book | null>>({
   loading: false,
   error: null,
@@ -28,10 +28,19 @@ const form = reactive<BookCreate>({
 
 const onSubmit = async () => {
   try {
-    await BookService.create({ ...form });
+    if (!id?.value) {
+      await BookService.create({ ...form });
+    } else {
+      await BookService.update(id.value, { ...form });
+    }
+    router.push({ name: "home" });
   } catch (error: any) {
     book.error = error.response.message;
   }
+};
+
+const onCancel = () => {
+  router.push({ name: "home" });
 };
 
 watch(book, (current) => {
@@ -112,7 +121,7 @@ onMounted(async () => {
     </fieldset>
     <fieldset class="field__container field__options">
       <input class="submit" type="submit" value="Guardar" />
-      <button type="button">Cancelar</button>
+      <button type="button" @click="onCancel">Cancelar</button>
     </fieldset>
   </form>
 </template>

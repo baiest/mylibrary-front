@@ -55,6 +55,7 @@ onMounted(async () => {
       <div class="table__header">
         <span>Nombre</span>
         <span>Descripción</span>
+        <span>Género</span>
         <span>Año de publicacion</span>
         <span>Creado</span>
         <span>Actualizado</span>
@@ -73,6 +74,7 @@ onMounted(async () => {
         >
           <span>{{ book.name }}</span>
           <span>{{ book.description }}</span>
+          <span>{{ book.gender }}</span>
           <span>{{ book.publication_year }}</span>
           <span>{{ book.created_at.toLocaleString() }}</span>
           <span>{{ book.updated_at.toLocaleString() }}</span>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Book } from "@/models/Book";
 import { toRefs } from "vue";
 
 const props = defineProps<{

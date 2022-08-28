@@ -19,7 +19,7 @@ const { x, y } = toRefs(props);
   </dialog>
 </template>
 
-<style>
+<style scoped>
 dialog {
   position: absolute;
   border: 1px solid #ccc;

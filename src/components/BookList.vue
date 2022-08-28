@@ -4,7 +4,7 @@ import type { RequestAxios } from "@/models/RequestAxios";
 import { BookService } from "@/services/book";
 import { onMounted, reactive, ref } from "vue";
 import DialogOptions from "./DialogOptions.vue";
-
+import Modal from "./ModalComponent.vue";
 const books = reactive<RequestAxios<Book[]>>({
   loading: false,
   error: null,
@@ -21,21 +21,44 @@ const dialogCords = reactive<{
 
 const tableContainer = ref<HTMLElement | null>(null);
 const openDialog = ref(false);
-const bookSelected = ref<number | null>(null);
+const bookSelected = ref<Book | null>(null);
 
 const closeDialog = () => {
   openDialog.value = false;
   bookSelected.value = null;
 };
 
-const selectBook = (event: MouseEvent, id: number) => {
+const selectBook = (event: MouseEvent, book: Book) => {
   const maxX = (tableContainer.value?.offsetWidth as number) - 100;
   const maxY = (tableContainer.value?.offsetHeight as number) - 60;
   openDialog.value = true;
-  bookSelected.value = id;
+  bookSelected.value = book;
   dialogCords.x = maxX > event.clientX ? event.clientX : maxX;
   dialogCords.y = maxY > event.clientY ? event.clientY : maxY;
-  console.log({ ...dialogCords }, maxX);
+};
+
+const isOpenDelete = ref(false);
+
+const openDelete = () => {
+  isOpenDelete.value = true;
+  openDialog.value = false;
+};
+const closeDelete = () => {
+  isOpenDelete.value = false;
+  bookSelected.value = null;
+};
+const deleteBook = async () => {
+  try {
+    if (!bookSelected.value) return;
+    await BookService.delete(bookSelected.value.id);
+    const indexBook = books.data.findIndex(
+      (b) => b.id === bookSelected.value?.id
+    );
+    books.data.splice(indexBook, 1);
+    closeDelete();
+  } catch (error: Error) {
+    books.error = error.response.message;
+  }
 };
 
 onMounted(async () => {
@@ -67,9 +90,9 @@ onMounted(async () => {
           v-for="book in books.data"
           :key="book.id"
           @click="closeDialog"
-          @contextmenu.prevent="selectBook($event, book.id)"
+          @contextmenu.prevent="selectBook($event, book)"
           :class="{
-            'table__row-selected': book.id === bookSelected,
+            'table__row-selected': book.id === bookSelected?.id,
           }"
         >
           <span>{{ book.name }}</span>
@@ -85,24 +108,47 @@ onMounted(async () => {
       :open="openDialog"
       :x="dialogCords.x"
       :y="dialogCords.y"
-      :id-book="bookSelected"
+      :id-book="bookSelected.id"
       v-if="bookSelected"
     >
       <ul class="dialog__options">
         <li class="dialog__item">
-          <router-link :to="{ name: 'detail', params: { id: bookSelected } }">
+          <router-link
+            :to="{ name: 'detail', params: { id: bookSelected.id } }"
+          >
             Ver
           </router-link>
         </li>
         <li class="dialog__item">
-          <router-link :to="{ name: 'update', params: { id: bookSelected } }">
+          <router-link
+            :to="{ name: 'update', params: { id: bookSelected.id } }"
+          >
             Editar
           </router-link>
         </li>
-        <li class="dialog__item">Borrar</li>
+        <li class="dialog__item" @click="openDelete">Borrar</li>
       </ul>
     </DialogOptions>
   </section>
+  <Modal :is-open="isOpenDelete" @close-modal="closeDelete">
+    <template v-slot:title><h2>Borrar libro</h2></template>
+    <template v-slot:body>
+      <p>¿Seguro quieres borrar este libro?</p>
+      <p>{{ bookSelected?.name }} de {{ bookSelected?.author }}</p>
+      <section class="modal__options">
+        <button @click="deleteBook" type="button" class="modal__options-btn">
+          Si, borrar
+        </button>
+        <button
+          @click="closeDelete"
+          type="button"
+          class="modal__options-btn cancel"
+        >
+          No, Cancelar
+        </button>
+      </section>
+    </template>
+  </Modal>
 </template>
 
 <style scoped>
@@ -148,5 +194,57 @@ onMounted(async () => {
 .table__row.table__row-selected {
   background: rgba(255, 255, 255, 0.3);
   transition: background 0.1s ease;
+}
+
+.dialog__options {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.dialog__item {
+  padding: 5px 20px;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+.dialog__item:hover {
+  background: #cccccca1;
+  cursor: pointer;
+}
+h2 {
+  margin: 1rem 0;
+}
+
+p {
+  text-align: center;
+  font-size: 1.8rem;
+  margin: 1rem 0;
+}
+
+.modal__options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 20px 0;
+}
+.modal__options-btn {
+  padding: 10px 15px;
+  font-size: 1.6rem;
+  cursor: pointer;
+
+  background: #8e8effaa;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.1s ease-out;
+}
+.modal__options-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px #00000090;
+  transition: all 0.1s ease-in;
+}
+.modal__options-btn.cancel {
+  border: 1px solid #8e8effaa;
+  background: none;
 }
 </style>

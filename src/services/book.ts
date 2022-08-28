@@ -29,4 +29,7 @@ export class BookService {
   static async update(id: string | number, data: Partial<BookCreate>) {
     await axios.put(`${BookService.path}/${id}`, data);
   }
+  static async delete(id: string | number) {
+    await axios.delete(`${BookService.path}/${id}`);
+  }
 }

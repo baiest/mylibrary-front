@@ -22,7 +22,7 @@ export class BookService {
     await axios.post(BookService.path, data);
   }
 
-  static async getById(id: string): Promise<Book> {
+  static async getById(id: string | number): Promise<Book> {
     const response = await axios.get<Book>(`${BookService.path}/${id}`);
     return toBook(response.data);
   }

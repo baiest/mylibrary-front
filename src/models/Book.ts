@@ -9,7 +9,7 @@ export interface Book {
   updated_at: Date;
 }
 
-export type BookCreate = Omit<Book, "id" | "createdAt" | "updatedAt">;
+export type BookCreate = Omit<Book, "id" | "created_at" | "updated_at">;
 
 export interface BookRequest extends Omit<BookCreate, "publicationYear"> {
   publication_year: number;

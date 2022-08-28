@@ -25,6 +25,14 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../components/Forms/BookForm.vue"),
     },
+    {
+      path: "/book/update/:id",
+      name: "update",
+      props: (router) => ({
+        id: parseInt(router.params.id as string),
+      }),
+      component: () => import("../components/Forms/BookForm.vue"),
+    },
   ],
 });
 

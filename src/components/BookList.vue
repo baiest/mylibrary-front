@@ -88,11 +88,15 @@ onMounted(async () => {
     >
       <ul class="dialog__options">
         <li class="dialog__item">
-          <router-link :to="{ name: 'detail', params: { id: bookSelected } }"
-            >Ver</router-link
-          >
+          <router-link :to="{ name: 'detail', params: { id: bookSelected } }">
+            Ver
+          </router-link>
         </li>
-        <li class="dialog__item">Editar</li>
+        <li class="dialog__item">
+          <router-link :to="{ name: 'update', params: { id: bookSelected } }">
+            Editar
+          </router-link>
+        </li>
         <li class="dialog__item">Borrar</li>
       </ul>
     </DialogOptions>
@@ -104,7 +108,6 @@ onMounted(async () => {
   max-height: 100%;
   min-width: 250px;
   overflow: auto;
-  /* background: lightcoral; */
 }
 .table,
 .table__body,

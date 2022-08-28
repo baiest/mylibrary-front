@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import "./style.css";
 import { listYears } from "@/utils/listYears";
-import { reactive } from "vue";
+import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import type { RequestAxios } from "@/models/RequestAxios";
-import type { BookCreate } from "@/models/Book";
+import type { Book, BookCreate } from "@/models/Book";
 import { BookService } from "@/services/book";
-const book = reactive<RequestAxios<null>>({
+
+const props = defineProps<{
+  id?: number;
+}>();
+
+const { id } = toRefs(props);
+
+const book = reactive<RequestAxios<Book | null>>({
   loading: false,
   error: null,
   data: null,
@@ -22,10 +29,29 @@ const form = reactive<BookCreate>({
 const onSubmit = async () => {
   try {
     await BookService.create({ ...form });
-  } catch (error: Error) {
+  } catch (error: any) {
     book.error = error.response.message;
   }
 };
+
+watch(book, (current) => {
+  if (!current.data) return;
+  type options = "name"; //One property to evit error ts key implicity any
+  const data = current.data;
+  const keys = Object.keys(data) as options[];
+  for (const key of keys) {
+    form[key] = data[key];
+  }
+});
+
+onMounted(async () => {
+  if (!id?.value) return;
+  try {
+    book.data = await BookService.getById(id.value as number);
+  } catch (error: any) {
+    book.error = error.response.message;
+  }
+});
 </script>
 
 <template>

@@ -10,6 +10,14 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: "/book/:id",
+      name: "detail",
+      // props: (router) => ({
+      //   id: router.params.id,
+      // }),
+      component: () => import("../components/Forms/BookForm.vue"),
+    },
+    {
       path: "/book/new",
       name: "new",
       // route level code-splitting

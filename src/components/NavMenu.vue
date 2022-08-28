@@ -15,6 +15,7 @@ nav {
   left: 0;
   right: 0;
   background: #000;
+  z-index: 1;
 }
 ul {
   display: flex;

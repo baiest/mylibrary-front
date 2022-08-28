@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
-
+import Close from "@/assets/icons/xmark-solid.svg";
 const props = defineProps<{
   isOpen: boolean;
 }>();
@@ -20,7 +20,7 @@ const closeModal = () => {
         <div class="modal__background" @click="closeModal"></div>
         <div class="modal__container">
           <button class="modal__close" @click="closeModal">
-            <span>x</span>
+            <Close />
           </button>
           <section class="modal__title">
             <slot name="title"></slot>
@@ -74,8 +74,17 @@ const closeModal = () => {
 }
 .modal__close {
   position: absolute;
+  background: #fff;
+  border: none;
   top: -10px;
-  right: 0;
+  right: -10px;
+  display: grid;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
 }
 
 .show-enter-active,

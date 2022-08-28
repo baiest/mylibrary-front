@@ -5,6 +5,9 @@ import { BookService } from "@/services/book";
 import { onMounted, reactive, ref } from "vue";
 import DialogOptions from "./DialogOptions.vue";
 import Modal from "./ModalComponent.vue";
+import Eye from "@/assets/icons/eye-solid.svg";
+import Pencil from "@/assets/icons/pen-solid.svg";
+import Trash from "@/assets/icons/trash-solid.svg";
 
 const books = reactive<RequestAPI<Book[]>>({
   loading: false,
@@ -118,6 +121,7 @@ onMounted(async () => {
           <router-link
             :to="{ name: 'detail', params: { id: bookSelected.id } }"
           >
+            <Eye />
             Ver
           </router-link>
         </li>
@@ -125,11 +129,15 @@ onMounted(async () => {
           <router-link
             :to="{ name: 'update', params: { id: bookSelected.id } }"
           >
+            <Pencil />
             Editar
           </router-link>
         </li>
         <li class="dialog__item">
-          <button @click="openDelete">Borrar</button>
+          <button @click="openDelete">
+            <Trash />
+            Borrar
+          </button>
         </li>
       </ul>
     </DialogOptions>
@@ -212,13 +220,16 @@ onMounted(async () => {
 .dialog__item a,
 .dialog__item button {
   display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
   padding: 5px 20px;
 }
 
 .dialog__item button {
   border: none;
   background: none;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 

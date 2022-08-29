@@ -84,7 +84,7 @@ onMounted(async () => {
         <span>Nombre</span>
         <span>Descripción</span>
         <span>Género</span>
-        <span>Año de publicacion</span>
+        <span>Año de publicación</span>
         <span>Creado</span>
         <span>Actualizado</span>
       </div>
